@@ -1,10 +1,10 @@
 import React from 'react'
-import Code_Editor from './components/Code_Editor'
+import Dashboard from './components/Dashboard'
 
 const App = () => {
   return (
     <>
-      <Code_Editor />
+      <Dashboard />
     </>
   )
 }
