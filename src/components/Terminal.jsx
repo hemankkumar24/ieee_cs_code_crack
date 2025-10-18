@@ -25,11 +25,11 @@ const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId }
     
 
   return (
-    <div className='min-h-full bg-neutral-800 border-t-2 border-neutral-600 p-2'>
+    <div className='min-h-full bg-neutral-800 border-t-2 border-neutral-600 p-2 overflow-auto'>
         <div className='text-neutral-400'>
             TERMINAL:
         </div>
-        <div className='text-white'>
+        <div className='text-white code text-lg'>
             {displayText}
         </div>
     </div>

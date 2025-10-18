@@ -17,7 +17,7 @@ const Dash = () => {
 
     useEffect(() => {
     const load_questions = async ()  => {
-        const { data, error } = await supabase.from('round_1').select('*')
+        const { data, error } = await supabase.from('questions_round_1').select('*')
         if (error) console.error('Error:', error)
         else setQuestions(data)
     }
@@ -35,7 +35,7 @@ const Dash = () => {
     }
     
   return (
-    <div className='flex justify-between h-screen w-full'>
+    <div className='flex justify-between h-screen w-full overflow-y-hidden overflow-x-auto'>
         <div className='w-1/2'>
             <div className='flex justify-between items-center p-3 bg-neutral-800'>
                 <div className='text-2xl text-neutral-50'>
