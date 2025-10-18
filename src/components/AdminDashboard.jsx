@@ -85,6 +85,14 @@ const AdminDashboard = () => {
 
     return (
         <div className='min-h-screen w-full bg-neutral-600 p-2'>
+            <div className='w-full flex justify-between items-center'>
+                <div className='text-3xl text-white pb-2'>
+                    IEEE CS
+                </div>
+                <div className='text-red-400 hover:text-red-500 active:text-red-600 cursor-pointer text-xl'>
+                    Logout
+                </div>
+            </div>
             <div className='bg-neutral-50 p-2'>
                 <div className='text-2xl w-full border-b-2 pb-2'>
                     CREATE TEAMS
