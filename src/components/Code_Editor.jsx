@@ -58,7 +58,10 @@ const Code_Editor = ( {recieve_error, recieve_output, ref, questions, selectedQu
         const data = await response.json();
         setCurrentOutput(data.run.stdout);
         if (data.run.stderr) {
-          setCurrentError(data.run.stderr)
+            setCurrentError(data.run.stderr); 
+        } else {
+            setCurrentOutput(data.run.stdout); 
+            setCurrentError("");
         }
     };
 
