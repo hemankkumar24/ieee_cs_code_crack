@@ -12,7 +12,7 @@ const AdminDashboard = () => {
         if (error) {
             console.error('Error logging out:', error);
         } else {
-            navigate('/');
+            navigate('/ieeecstopadminlogin');
         }
     };
     useEffect(() => {
@@ -98,9 +98,15 @@ const AdminDashboard = () => {
                 <div className='text-3xl text-white pb-2'>
                     IEEE CS
                 </div>
-                <div className='text-red-400 hover:text-red-500 active:text-red-600 cursor-pointer text-xl'
-                 onClick={handleLogout}>
-                    Logout
+                <div className='gap-5 flex items-center'>
+                    <div className='text-green-400 hover:text-green-500 active:text-green-600 cursor-pointer'
+                    onClick={() => {navigate('/addquestions')}}>
+                        Add Questions
+                    </div>
+                    <div className='text-red-400 hover:text-red-500 active:text-red-600 cursor-pointer text-xl'
+                    onClick={handleLogout}>
+                        Logout
+                    </div>
                 </div>
             </div>
             <div className='bg-neutral-50 p-2'>
