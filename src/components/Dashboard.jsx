@@ -6,6 +6,11 @@ import { useNavigate } from 'react-router-dom'
 
 const Dash = () => {
     const navigate = useNavigate()
+    const [teamData, setTeamData] = useState({ total_score: 0 })
+
+    const incrementScore = (points) => {
+        setTeamData(prev => ({ ...prev, total_score: prev.total_score + points }));
+    };
 
     {/* Idhar se checking about team auth and score tracking ke liye row creation */}
     const teamName = localStorage.getItem('team_name')
@@ -33,13 +38,19 @@ const Dash = () => {
                         team_name: teamName,
                         total_score: 0
                     }
-                ]).select().single()
+                ]).select().single();
+                setTeamData(insertData)
             }
+            else
+            {
+                setTeamData(data)
+            }
+
         }
 
         verifyTeam()
 
-    }, [navigate])
+    }, [navigate, teamName])
 
 
     {/* Handling Dashboard Things here */}
@@ -82,6 +93,9 @@ const Dash = () => {
                 </div>
                 <div className='flex gap-3 text-neutral-50 items-center'>
                     <div>
+                        Score {teamData ? teamData.total_score : 0} 
+                    </div>
+                    <div>
                         <select className='bg-neutral-800'
                         value={selectedQuestionId}
                         onChange={handleQuestionChange}>
@@ -122,7 +136,7 @@ const Dash = () => {
                 <Code_Editor recieve_error={recieve_error} recieve_output={recieve_output} ref={editorRef} questions={questions} selectedQuestionId={selectedQuestionId} selectedOption={selectedOption} />
             </div>
             <div className='h-1/4'>
-            <Terminal currentError={currentError} currentOutput={currentOutput} questions={questions} selectedQuestionId={selectedQuestionId}/>
+                <Terminal currentError={currentError} currentOutput={currentOutput} questions={questions} selectedQuestionId={selectedQuestionId} incrementScore={incrementScore} />
             </div>
         </div>
     </div>
