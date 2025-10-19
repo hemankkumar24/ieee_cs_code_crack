@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient';
 
-const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId, incrementScore }) => {
+const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId, incrementScore, executionCount }) => {
     const [displayText, setDisplayText] = useState('');
     const teamId = localStorage.getItem('team_id')
     useEffect(() => {
@@ -17,7 +17,9 @@ const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId, 
         let text = '';
 
         const terminalDataUpdate = async () => {
-            
+
+            setDisplayText(''); // set it to nothing before showing new
+
             if (cleanOutput === "") {
                 text = ''; // show no output when the program hasnt been run yet
             } else if (cleanOutput === cleanAnswer) {
@@ -54,7 +56,7 @@ const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId, 
 
         terminalDataUpdate();
 
-    }, [currentOutput, currentError, questions, selectedQuestionId]);
+    }, [currentOutput, currentError, questions, selectedQuestionId, executionCount]);
     
 
   return (

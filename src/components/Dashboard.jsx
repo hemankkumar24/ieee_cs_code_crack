@@ -7,6 +7,10 @@ import { useNavigate } from 'react-router-dom'
 const Dash = () => {
     const navigate = useNavigate()
     const [teamData, setTeamData] = useState({ total_score: 0 })
+    const [executionCount, setExecutionCount] = useState(0);
+    const [loading, setLoading] = useState(true)
+    const [overlay, setOverlay] = useState(false)
+    const [leaderboardData, setLeaderboardData] = useState([]);
 
     const incrementScore = (points) => {
         setTeamData(prev => ({ ...prev, total_score: prev.total_score + points }));
@@ -20,6 +24,7 @@ const Dash = () => {
 
             if (!teamId || !teamName) {
                 navigate('/');
+                setLoading(false);
                 return;
             }
 
@@ -27,6 +32,7 @@ const Dash = () => {
             .maybeSingle() // check if a row for the team exists
 
             if(error) {
+                setLoading(false);
                 return;
             }
 
@@ -45,7 +51,7 @@ const Dash = () => {
             {
                 setTeamData(data)
             }
-
+            setLoading(false);
         }
 
         verifyTeam()
@@ -83,7 +89,24 @@ const Dash = () => {
     const recieve_error = (value) => {
         setCurrentError(value);
     }
+
+    const toggleOverlay = async () => {
+        setOverlay(prev => !prev);
+        if (!overlay) { 
+            const { data, error } = await supabase
+                .from('scores_round_1')
+                .select('*')
+                .order('total_score', { ascending: false }); 
+            if (error) console.error('Error fetching leaderboard:', error);
+            else setLeaderboardData(data);
+        }
+    }
+
     
+    if (loading) {
+        return <div className='h-screen w-full flex items-center justify-center bg-neutral-800 text-white text-3xl'>Loading Dashboard...</div>
+    }
+
   return (
     <div className='flex justify-between h-screen w-full overflow-y-hidden overflow-x-auto'>
         <div className='w-1/2'>
@@ -118,7 +141,7 @@ const Dash = () => {
                         ))
                         }
                     </select>
-                    <div className='cursor-pointer' onClick={() => editorRef.current.executeCode()}>
+                    <div className='cursor-pointer' onClick={() => {editorRef.current.executeCode();setExecutionCount(prev => prev + 1);}}>
                         Run
                     </div>
                 </div>
@@ -136,9 +159,39 @@ const Dash = () => {
                 <Code_Editor recieve_error={recieve_error} recieve_output={recieve_output} ref={editorRef} questions={questions} selectedQuestionId={selectedQuestionId} selectedOption={selectedOption} />
             </div>
             <div className='h-1/4'>
-                <Terminal currentError={currentError} currentOutput={currentOutput} questions={questions} selectedQuestionId={selectedQuestionId} incrementScore={incrementScore} />
+                <Terminal currentError={currentError} currentOutput={currentOutput} questions={questions} selectedQuestionId={selectedQuestionId} incrementScore={incrementScore} executionCount={executionCount}/>
             </div>
         </div>
+        <div className='absolute m-2 bottom-0 left-0 w-50 h-10 bg-neutral-700 rounded text-xl text-white flex justify-center items-center cursor-pointer hover:bg-neutral-800' onClick={toggleOverlay}>
+            Leaderboard
+        </div>
+        {overlay && (
+            <div className='absolute bottom-11 rounded p-4 text-white m-2 w-96 bg-neutral-700'>
+                <div className='text-xl mb-2 font-bold'>
+                    Leaderboard
+                </div>
+                <div className='overflow-y-auto max-h-64'>
+                    <table className='w-full text-left border-collapse'>
+                        <thead>
+                            <tr className='border-b border-neutral-500'>
+                                <th className='py-1 px-2'>Sr</th>
+                                <th className='py-1 px-2'>Team</th>
+                                <th className='py-1 px-2'>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {leaderboardData.map((team, index) => (
+                                <tr key={team.team_id} className='border-b border-neutral-600 hover:bg-neutral-600'>
+                                    <td className='py-1 px-2'>{index + 1}</td>
+                                    <td className='py-1 px-2'>{team.team_name}</td>
+                                    <td className='py-1 px-2'>{team.total_score}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        )}
     </div>
   )
 }

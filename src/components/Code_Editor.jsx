@@ -24,13 +24,6 @@ const Code_Editor = ( {recieve_error, recieve_output, ref, questions, selectedQu
     // show the code appropriately
     const code = selectedQuestion ? selectedQuestion[buggy_code] : ''
 
-    useEffect(() => {
-        recieve_output(currentOutput); // to send output to parent
-    }, [currentOutput]);
-
-    useEffect(() => {
-        recieve_error(currentError) // to send error to parent
-    }, [currentError])
 
     useEffect(() => {
       setCurrentCode(code) // to set code
@@ -54,14 +47,14 @@ const Code_Editor = ( {recieve_error, recieve_output, ref, questions, selectedQu
               "stdin": questions.find(q => q.id == selectedQuestionId)['test_case']
         })
     });
-
+    
         const data = await response.json();
-        setCurrentOutput(data.run.stdout);
-        if (data.run.stderr) {
-            setCurrentError(data.run.stderr); 
+        if (data.run.stderr && data.run.stderr.trim() !== "") {
+            recieve_error(data.run.stderr);
+            recieve_output(""); 
         } else {
-            setCurrentOutput(data.run.stdout); 
-            setCurrentError("");
+            recieve_output(data.run.stdout);
+            recieve_error("");
         }
     };
 
