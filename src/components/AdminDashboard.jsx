@@ -6,6 +6,15 @@ import bcrypt from 'bcryptjs';
 const AdminDashboard = () => {
     const navigate = useNavigate()
 
+    const handleLogout = async () => {
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error('Error logging out:', error);
+        } else {
+            navigate('/');
+        }
+    };
     useEffect(() => {
         const checkUser = async () => {
             const { data } = await supabase.auth.getUser()
@@ -89,7 +98,8 @@ const AdminDashboard = () => {
                 <div className='text-3xl text-white pb-2'>
                     IEEE CS
                 </div>
-                <div className='text-red-400 hover:text-red-500 active:text-red-600 cursor-pointer text-xl'>
+                <div className='text-red-400 hover:text-red-500 active:text-red-600 cursor-pointer text-xl'
+                 onClick={handleLogout}>
                     Logout
                 </div>
             </div>

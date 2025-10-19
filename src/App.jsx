@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard'
 import AdminLogin from './components/AdminLogin'
 import AdminDashboard from './components/AdminDashboard';
+import Login from './components/Login';
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/ieeecstopadminlogin" element={<AdminLogin />} />
         <Route path="/addaccounts" element={<AdminDashboard />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </>
   )

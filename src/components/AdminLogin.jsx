@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom'
 
@@ -6,6 +6,16 @@ const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate()
+
+    useEffect(() => {
+            const checkUser = async () => {
+                const { data } = await supabase.auth.getUser()
+
+                if(data.user)
+                {
+                    navigate('/addaccounts')
+                }
+            }})
     
     const onSubmit = async (e) => {
         e.preventDefault();

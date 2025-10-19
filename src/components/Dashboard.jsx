@@ -2,8 +2,47 @@ import React, { useEffect, useRef, useState } from 'react'
 import Code_Editor from './Code_Editor'
 import { supabase } from '../supabaseClient';
 import Terminal from './Terminal';
+import { useNavigate } from 'react-router-dom'
 
 const Dash = () => {
+    const navigate = useNavigate()
+
+    {/* Idhar se checking about team auth and score tracking ke liye row creation */}
+    const teamName = localStorage.getItem('team_name')
+    useEffect(() => { // this is to check if the team is logged in
+        const verifyTeam = async () => {
+            const teamId = localStorage.getItem('team_id')
+
+            if (!teamId || !teamName) {
+                navigate('/');
+                return;
+            }
+
+            const { data, error } = await supabase.from('scores_round_1').select('*').eq('team_id', teamId)
+            .maybeSingle() // check if a row for the team exists
+
+            if(error) {
+                return;
+            }
+
+            if(!data) { // if not create a new one!
+                const {data: insertData, error: insertError} = await supabase.from('scores_round_1').insert
+                ([
+                    {
+                        team_id: teamId,
+                        team_name: teamName,
+                        total_score: 0
+                    }
+                ]).select().single()
+            }
+        }
+
+        verifyTeam()
+
+    }, [navigate])
+
+
+    {/* Handling Dashboard Things here */}
     const options = ['Python', 'CPP', 'C', 'Java'];
     const [questions, setQuestions] = useState([])
     const [selectedQuestionId, setSelectedQuestionId] = useState('1')
@@ -39,7 +78,7 @@ const Dash = () => {
         <div className='w-1/2'>
             <div className='flex justify-between items-center p-3 bg-neutral-800'>
                 <div className='text-2xl text-neutral-50'>
-                    TEAM_NAME
+                    TEAM {teamName}
                 </div>
                 <div className='flex gap-3 text-neutral-50 items-center'>
                     <div>
