@@ -70,7 +70,7 @@ const Code_Editor = ( {recieve_error, recieve_output, ref, questions, selectedQu
         theme="vs-dark" 
         language={selectedOption.toLowerCase()} 
         value={code}
-        onChange={(value) => {setCurrentCode(value)}} // idhar abhi print hai!
+        onChange={(value) => {setCurrentCode(value)}} 
         onMount={onMount}
         />
     </div>

@@ -123,9 +123,9 @@ const Dash = () => {
                         value={selectedQuestionId}
                         onChange={handleQuestionChange}>
                             {
-                            questions.map((item) => (
+                            questions.map((item, index) => (
                                 <option key={item.id} value={item.id}>
-                                {'Question ' + item.id} {/* Choose question number here */}
+                                {'Question ' + (index + 1)} {/* Choose question number here */}
                                 </option>
                             ))
                             }

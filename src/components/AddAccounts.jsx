@@ -19,7 +19,7 @@ const AdminDashboard = () => {
         const checkUser = async () => {
             const { data } = await supabase.auth.getUser()
             if (!data.user) {
-                navigate('/') 
+                navigate('/ieeecstopadminlogin') 
             }
         }
 
@@ -77,18 +77,18 @@ const AdminDashboard = () => {
         setTeamData(prev => [...prev, ...data])
     }
 
-    const handleDelete = async (teamId) => {
-        const confirmed = window.confirm(`Are you sure you want to delete ${teamName}?`);
+    const handleDelete = async (team) => {
+        const confirmed = window.confirm(`Are you sure you want to delete ${team.team_name}?`);
         if (!confirmed) return;
         const { data, error } = await supabase
             .from('authentication_table')
             .delete()
-            .eq('id', teamId)   
+            .eq('id', team.id)   
 
         if (error) {
             console.error('Error deleting team:', error)
         } else {
-            setTeamData(prev => prev.filter(team => team.id !== teamId))
+            setTeamData(prev => prev.filter(t => t.id !== team.id))
         }
     }
 
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
                                         </div>
                                     </div>
                                     <div className='text-red-400 hover:text-red-500 active:text-red-600 cursor-pointer'
-                                     onClick={() => {handleDelete(team.id)}}>
+                                     onClick={() => {handleDelete(team)}}>
                                         Delete Team
                                     </div>
                                 </div>
