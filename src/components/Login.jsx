@@ -28,7 +28,7 @@ const Login = () => {
 
   return (
     <div className='h-screen w-full bg-neutral-900 flex items-center justify-center'>
-        <div className='h-auto py-2 w-[450px] bg-neutral-800/75 '>
+        <div className='h-auto py-2 w-[450px] bg-neutral-800/75 shadow-lg shadow-neutral-100/15'>
             <div>
                 <div className='p-5'>
                     <div className='flex w-full justify-between items-center'>
@@ -40,7 +40,7 @@ const Login = () => {
                         <div className='pt-2 text-xl text-white'>
                             Leader's Mail
                         </div>
-                        <input type="text" className='mt-1 p-3 w-full bg-neutral-600 outline-0 text-white focus:shadow-xl transition duration-200' value={email}
+                        <input type="text" className='mt-2 p-3 w-full bg-neutral-600 outline-0 text-white focus:shadow-xl transition duration-200' value={email}
                         onChange={(e) => {setEmail(e.target.value)}} placeholder='Email'/>
                         <div className='pt-2 text-xl text-white'>
                             Password
@@ -48,7 +48,7 @@ const Login = () => {
                         <input type="text" className='mt-1 p-3 w-full bg-neutral-600 outline-0 text-white focus:shadow-xl transition duration-200' value={password} 
                         onChange={(e) => {setPassword(e.target.value)}} placeholder='Password'/>
                         <button type='submit' className='p-3 text-white w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-600 cursor-pointer
-                        rounded mt-2'>
+                        rounded mt-3'>
                             Submit
                         </button>
                     </form>

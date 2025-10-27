@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient';
+import axios from 'axios';
 
 const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId, incrementScore, executionCount }) => {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [displayText, setDisplayText] = useState('');
     const teamId = localStorage.getItem('team_id')
     useEffect(() => {
@@ -24,22 +26,14 @@ const Terminal = ({ currentError, currentOutput, questions, selectedQuestionId, 
                 text = ''; // show no output when the program hasnt been run yet
             } else if (cleanOutput === cleanAnswer) {
                 text = 'Correct Answer'; // if the output is correct
-                const { data, error } = await supabase.from('submissions_round_1').select('*').eq('team_id', teamId)
-                .eq('question_id', parseInt(selectedQuestionId)).maybeSingle(); // check if a submission for that question already exists
-        
-                if(!data) // if it does NOT
-                {
-                    const {error: insertError} = await supabase.from('submissions_round_1').insert([{team_id: teamId, question_id: parseInt(selectedQuestionId), is_correct: true}])
-                    // make a submission row marking it correct
 
-                    const {data: scoreData, error: scoreError} = await supabase.from('scores_round_1').select('total_score').eq('team_id', teamId).maybeSingle();
-                    // get the current score for the team 
-                    const current_score = scoreData ? scoreData.total_score : 0;
-                    
-                    // and update it by incrementing it by 10
-                    const {error: scoreUpdateError} = await supabase.from('scores_round_1').update({'total_score': current_score + 10}).eq('team_id', teamId);
-
-                    // this function will visually update it in our dashboard
+                const res = await axios.post(`${backendUrl}/api/submissions/submit`, {
+                    teamId,
+                    questionId: selectedQuestionId,
+                    isCorrect: true
+                }); 
+                
+                if (res.data.success && !res.data.alreadySubmitted) {
                     incrementScore(10);
                 }
 
