@@ -2,29 +2,45 @@ import React, { useState } from 'react'
 import { supabase } from '../supabaseClient'
 import bcrypt from 'bcryptjs'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Login = () => {
-
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const { data, error } = await supabase.from('authentication_table').select('*')
-        .eq('email', email).single()
+        try {
+            const res = await axios.post(`${backendUrl}/api/login`, {
+                email: email,
+                password: password
+            });
 
-        if (error || !data) {
-            alert('Invalid email or password')
-            return
+            if (res.status === 200) {
+                const data = res.data;
+                
+                alert(`Welcome ${data.team_name}!`)
+                localStorage.setItem('team_id', data.id)
+                localStorage.setItem('team_name', data.team_name)
+
+                navigate('/dashboard')
+            }
         }
-
-        alert(`Welcome ${data.team_name}!`)
-        localStorage.setItem('team_id', data.id)
-        localStorage.setItem('team_name', data.team_name)
-
-        navigate('/dashboard')
+        catch (err) {
+            console.log(err.response.data)
+                console.log('Status code:', err.response.status);
+    console.log('Headers:', err.response.headers);
+            if (err.response.status === 401) {
+                alert("Invalid email or password");
+            }
+            else {
+                alert("Some Error Occured: Try Again")
+            }
+        }
     }
+
 
   return (
     <div className='h-screen w-full bg-neutral-900 flex items-center justify-center'>
